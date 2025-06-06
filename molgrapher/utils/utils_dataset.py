@@ -53,7 +53,12 @@ class CaptionRemover:
         self.remove_captions = remove_captions
         # Set the number of threads used in pytorch to 1 to avoid conflicts with MKL.
         torch.set_num_threads(1)
-       
+    
+    def __get_ocr(self):
+        if CaptionRemover.ocr is None:
+            CaptionRemover.ocr = get_ocr(force_cpu = force_cpu)
+        return CaptionRemover.ocr
+
     def _preprocess_images_process(self, images_or_paths):
         pil_images = []
         for image_or_path in tqdm(images_or_paths):
@@ -101,7 +106,7 @@ class CaptionRemover:
         self.image = image
             
         # Run OCR to determine whether or not to apply the mask filter
-        result = self.ocr.ocr(self.image)
+        result = self.__get_ocr().ocr(self.image)
         if result == [None]:
             return self.image
         self.boxes = [line[0] for line in result[0]]
