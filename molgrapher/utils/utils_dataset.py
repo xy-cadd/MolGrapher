@@ -56,7 +56,7 @@ class CaptionRemover:
     
     def __get_ocr(self):
         if CaptionRemover.ocr is None:
-            CaptionRemover.ocr = get_ocr(force_cpu = force_cpu)
+            CaptionRemover.ocr = get_ocr(force_cpu = self.force_cpu)
         return CaptionRemover.ocr
 
     def _preprocess_images_process(self, images_or_paths):
